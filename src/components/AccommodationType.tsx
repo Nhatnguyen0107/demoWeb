@@ -18,14 +18,17 @@ const AccommodationType: React.FC = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axiosClient.get("categories");
+                const res = await axiosClient.get("/categories");
                 const list = Array.isArray(res.data) ? res.data : res.data.data;
 
                 const parsedList = list.map((item: TAny) => ({
                     ...item,
-                    image_url: Array.isArray(item.image_url)
-                        ? item.image_url
-                        : JSON.parse(item.image_url || "[]"),
+                    image_url:
+                        typeof item.image_url === "string"
+                            ? [item.image_url]
+                            : Array.isArray(item.image_url)
+                                ? item.image_url
+                                : [],
                 }));
 
                 setCategories(parsedList);

@@ -20,6 +20,8 @@ import NotFound from "./NotFound";
 import Profile from "./pages/admin/setting/profile";
 import CategoriesList from "./pages/admin/categories/categories-list";
 import CategoriesForm from "./pages/admin/categories/categories-form";
+import UsersForm from "./pages/admin/users/user-form";
+
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import AccommodationType from "./components/AccommodationType";
@@ -48,14 +50,14 @@ function App() {
         {/* điều hướng tới trang con loại phòng */}
         <Route path="/" element={<Home />} />
         <Route path="/" element={<AccommodationType />} />
-        <Route path="/categories/:id" element={<CategoryRoomsPage />} />
+        <Route path="/categories/:categoryId" element={<CategoryRoomsPage />} />
         <Route path="/room-types/:id" element={<RoomTypeDetail />} />
 
 
         {/* Public routes */}
         <Route path="/" element={<Home />} />
 
-        <Route path="/room/:id" element={<RoomDetailPage />} />
+        <Route path="/rooms/:id" element={<RoomDetailPage />} />
 
         <Route element={<PublicRoute />}>
 
@@ -75,6 +77,8 @@ function App() {
             <Route path="category-list" element={<CategoriesList />} />
             <Route path="category-form" element={<CategoriesForm />} />
             <Route path="category-form/:id" element={<CategoriesForm />} />
+            <Route path="user-form" element={<UsersForm />} />
+            <Route path="user-form/:id" element={<UsersForm />} />
             <Route path="profile" element={<Profile />} />
           </Route>
         </Route>

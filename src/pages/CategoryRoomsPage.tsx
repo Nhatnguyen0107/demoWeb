@@ -9,29 +9,55 @@ interface Room {
     name: string;
     description: string;
     price: number;
-    image_url: string;
+    image_url: string[] | string;
+    category_id: string;
 }
 
 const CategoryRoomsPage: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); // Lấy category_id từ URL
+    const { categoryId } = useParams<{ categoryId: string }>();
     const [rooms, setRooms] = useState<Room[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [priceFilter, setPriceFilter] = useState<string>("all"); // 👈 bộ lọc giá
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const res = await axiosClient.get(`rooms/category/${id}`);
-                const list = Array.isArray(res.data) ? res.data : res.data.data;
+                let endpoint = "/rooms";
+                if (categoryId) endpoint = `/rooms/category/${categoryId}`;
+
+                const res = await axiosClient.get(endpoint);
+                console.log("📦 API rooms trả về:", res.data);
+
+                const list = res.data?.data ?? [];
+
+                if (!Array.isArray(list)) {
+                    console.error("❌ Dữ liệu rooms không phải mảng:", list);
+                    setRooms([]);
+                    return;
+                }
+
                 setRooms(list);
             } catch (err) {
-                console.error("Lỗi khi tải danh sách phòng:", err);
+                console.error("❌ Lỗi khi tải danh sách phòng:", err);
                 setRooms([]);
             } finally {
                 setLoading(false);
             }
         };
+
         fetchRooms();
-    }, [id]);
+    }, [categoryId]);
+
+    //  Lọc danh sách phòng theo giá
+    const filteredRooms = rooms.filter((room) => {
+        if (priceFilter === "1-1.5") {
+            return room.price >= 1000000 && room.price <= 1500000;
+        }
+        if (priceFilter === "1.5-2") {
+            return room.price > 1500000 && room.price <= 2000000;
+        }
+        return true; // "all"
+    });
 
     if (loading) return <p>Đang tải danh sách phòng...</p>;
 
@@ -44,21 +70,36 @@ const CategoryRoomsPage: React.FC = () => {
                 </Link>
             </div>
 
-            {rooms.length === 0 ? (
-                <p>Hết phòng.</p>
+            {/* 🧭 Bộ lọc giá */}
+            <div className="flex items-center gap-4 mb-6">
+                <label className="font-medium">Lọc theo giá:</label>
+                <select
+                    value={priceFilter}
+                    onChange={(e) => setPriceFilter(e.target.value)}
+                    className="border px-3 py-2 rounded-md"
+                >
+                    <option value="all">Tất cả</option>
+                    <option value="1-1.5">1.000.000 - 1.500.000 VND</option>
+                    <option value="1.5-2">1.500.000 - 2.000.000 VND</option>
+                </select>
+            </div>
+
+            {filteredRooms.length === 0 ? (
+                <p>Không có phòng nào phù hợp với mức giá này.</p>
             ) : (
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {rooms.map((room) => (
+                    {filteredRooms.map((room) => (
                         <Link
                             to={`/rooms/${room.id}`}
                             key={room.id}
                             className="border rounded-lg shadow hover:shadow-lg transition p-3 block"
                         >
                             <img
-                                src={`${room.image_url}`}
+                                src={Array.isArray(room.image_url) ? room.image_url[0] : room.image_url}
                                 alt={room.name}
                                 className="w-full h-48 object-cover rounded-md"
                             />
+
                             <h4 className="text-lg font-semibold mt-2">{room.name}</h4>
                             <p className="text-gray-600 text-sm line-clamp-2">{room.description}</p>
                             <p className="text-blue-500 font-medium mt-1">
@@ -66,9 +107,7 @@ const CategoryRoomsPage: React.FC = () => {
                             </p>
                         </Link>
                     ))}
-
                 </div>
-
             )}
         </section>
     );
