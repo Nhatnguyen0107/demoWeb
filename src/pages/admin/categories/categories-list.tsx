@@ -102,7 +102,7 @@ const CategoryList: React.FC = () => {
                     src={
                       cate.image_url[0].startsWith("http")
                         ? cate.image_url[0]
-                        : `http://localhost:3000${cate.image_url[0]}`
+                        : `https://demo-be-hhq0.onrender.com${cate.image_url[0]}`
                     }
                     alt={cate.name}
                     style={{

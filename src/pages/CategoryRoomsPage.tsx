@@ -99,7 +99,7 @@ const CategoryRoomsPage: React.FC = () => {
                                     room.image_url && room.image_url.length > 0
                                         ? room.image_url[0].startsWith("http")
                                             ? room.image_url[0]
-                                            : `http://localhost:3000${room.image_url[0]}`
+                                            : `https://demo-be-hhq0.onrender.com${room.image_url[0]}`
                                         : "/default-room.jpg"
                                 }
                                 alt={room.name}
