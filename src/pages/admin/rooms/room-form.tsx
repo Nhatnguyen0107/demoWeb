@@ -36,7 +36,7 @@ const AddRoom = () => {
     useEffect(() => {
         const fetchCities = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/v1/cities");
+                const res = await axios.get("https://demo-be-hhq0.onrender.com/api/v1/cities");
                 setCities(res.data?.data || res.data || []);
             } catch (err) {
                 console.error("❌ Lỗi khi lấy danh sách city:", err);
@@ -50,7 +50,7 @@ const AddRoom = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/api/v1/categories");
+                const res = await axios.get("https://demo-be-hhq0.onrender.com/api/v1/categories");
                 setCategories(res.data?.data || res.data || []);
             } catch (err) {
                 console.error("❌ Lỗi khi lấy danh sách category:", err);
@@ -92,7 +92,7 @@ const AddRoom = () => {
             });
 
             const uploadRes = await axios.post(
-                "http://localhost:3000/api/v1/upload",
+                "https://demo-be-hhq0.onrender.com/api/v1/upload",
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -113,7 +113,7 @@ const AddRoom = () => {
                 image_url: imageUrls, // backend của bạn nhận image_url[]
             };
 
-            await axios.post("http://localhost:3000/api/v1/rooms", roomData);
+            await axios.post("https://demo-be-hhq0.onrender.com/api/v1/rooms", roomData);
             toast.success("Thêm phòng thành công!");
             reset();
             navigate("/admin/room-list");

@@ -108,7 +108,7 @@ const RoomList: React.FC = () => {
                                             src={
                                                 room.image_url?.[0]?.startsWith("http")
                                                     ? room.image_url[0]
-                                                    : `http://localhost:3000${room.image_url[0]}`
+                                                    : `https://demo-be-hhq0.onrender.com${room.image_url[0]}`
                                             }
                                             alt={room.name}
                                             style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px" }}
